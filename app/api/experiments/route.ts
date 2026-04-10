@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { getExperiments, createExperiment } from '@/lib/supabase'
 
+export const dynamic = 'force-dynamic'
+
 export async function GET() {
   try {
     const experiments = await getExperiments()

@@ -32,7 +32,8 @@ const outcomeColors: Record<string, string> = {
 export default function ExperimentDetail() {
   const { id } = useParams()
   const router = useRouter()
-  const [experiment, setExperiment] = useState<Record<string, unknown> | null>(null)
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const [experiment, setExperiment] = useState<any>(null)
   const [loading, setLoading] = useState(true)
   const [chatOpen, setChatOpen] = useState(true)
 
@@ -70,12 +71,18 @@ export default function ExperimentDetail() {
 
   if (!experiment) return null
 
-  const versions = (experiment.versions as Record<string, unknown>[]) || []
-  const tasks = (experiment.tasks as Record<string, unknown>[]) || []
-  const measurements = (experiment.measurements as Record<string, unknown>[]) || []
-  const currentVersion = versions[0] as Record<string, unknown> | undefined
-  const openTasks = tasks.filter(t => t.status === 'todo')
-  const doneTasks = tasks.filter(t => t.status === 'done')
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const versions: any[] = experiment.versions || []
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const tasks: any[] = experiment.tasks || []
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const measurements: any[] = experiment.measurements || []
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const currentVersion: any = versions[0]
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const openTasks: any[] = tasks.filter((t: any) => t.status === 'todo')
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const doneTasks: any[] = tasks.filter((t: any) => t.status === 'done')
 
   return (
     <div className="flex h-screen bg-gray-50 overflow-hidden">
@@ -128,7 +135,7 @@ export default function ExperimentDetail() {
                   <p className="text-xs text-gray-500 font-medium mb-0.5">Hypothesis</p>
                   <p className="text-sm text-gray-800">{currentVersion.hypothesis as string}</p>
                 </div>
-                {currentVersion.inputs && (currentVersion.inputs as string[]).length > 0 && (
+                {Array.isArray(currentVersion.inputs) && currentVersion.inputs.length > 0 && (
                   <div>
                     <p className="text-xs text-gray-500 font-medium mb-1">Inputs / Levers</p>
                     <div className="flex flex-wrap gap-1.5">
@@ -261,29 +268,26 @@ export default function ExperimentDetail() {
               </CardHeader>
               <CardContent>
                 <div className="space-y-4">
-                  {versions.slice(1).map((v, i) => {
-                    const ver = v as Record<string, unknown>
-                    return (
-                      <div key={ver.id as string} className="relative pl-4 border-l-2 border-gray-100">
+                  {versions.slice(1).map((ver) => (
+                      <div key={ver.id} className="relative pl-4 border-l-2 border-gray-100">
                         <div className="absolute -left-1.5 top-0 w-3 h-3 rounded-full bg-gray-200" />
                         <div className="flex items-center gap-2 mb-1">
-                          <span className="text-xs font-mono text-gray-500">v{ver.version_number as number}</span>
-                          <span className={`text-xs px-1.5 py-0.5 rounded border ${outcomeColors[ver.outcome as string]}`}>
-                            {ver.outcome as string}
+                          <span className="text-xs font-mono text-gray-500">v{ver.version_number}</span>
+                          <span className={`text-xs px-1.5 py-0.5 rounded border ${outcomeColors[ver.outcome]}`}>
+                            {ver.outcome}
                           </span>
                           {ver.start_date && (
                             <span className="text-xs text-gray-400">
-                              {format(new Date(ver.start_date as string), 'MMM d, yyyy')}
+                              {format(new Date(ver.start_date), 'MMM d, yyyy')}
                             </span>
                           )}
                         </div>
-                        <p className="text-sm text-gray-700 mb-1">{ver.hypothesis as string}</p>
+                        <p className="text-sm text-gray-700 mb-1">{ver.hypothesis}</p>
                         {ver.pivot_reason && (
-                          <p className="text-xs text-gray-500 italic">Pivot reason: {ver.pivot_reason as string}</p>
+                          <p className="text-xs text-gray-500 italic">Pivot reason: {ver.pivot_reason}</p>
                         )}
                       </div>
-                    )
-                  })}
+                  ))}
                 </div>
               </CardContent>
             </Card>

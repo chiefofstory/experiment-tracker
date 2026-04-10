@@ -1,5 +1,7 @@
 import Anthropic from '@anthropic-ai/sdk'
 import { NextRequest, NextResponse } from 'next/server'
+
+export const dynamic = 'force-dynamic'
 import { buildSystemPrompt, parseToolCalls, stripToolCalls } from '@/lib/ai-context'
 import { getExperiments, createExperiment, addMeasurement, addTask, completeTask, updateExperiment, pivotExperiment } from '@/lib/supabase'
 import { ChatMessage } from '@/lib/types'
